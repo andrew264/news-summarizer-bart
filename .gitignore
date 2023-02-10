@@ -1,0 +1,11 @@
+# PyCharm
+/.idea
+
+# Model
+/bart_large_cnn
+
+# API keys
+config.json
+
+# Python Cache
+*.pyc

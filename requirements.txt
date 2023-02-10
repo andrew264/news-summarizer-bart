@@ -1,0 +1,5 @@
+tensorflow
+transformers
+bs4
+soupsieve
+python-dateutil
