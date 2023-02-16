@@ -3,3 +3,5 @@ transformers
 bs4
 soupsieve
 python-dateutil
+customtkinter
+newsapi-python
