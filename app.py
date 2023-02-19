@@ -3,8 +3,10 @@ import typing
 from multiprocessing import Process, Queue
 
 import customtkinter
+from PIL import ImageTk
 
 from fetch import fetch_news
+from select_window import SelectWindow
 
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
@@ -13,14 +15,17 @@ END = "end"
 FONT = ("Comic Sans MS", 20)
 
 
-class SearchWindow(tkinter.Tk):
+class SearchWindow(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         self.title("News Summary")
-        self.iconphoto(False, tkinter.PhotoImage(file="icon.png"))
+        self.iconphoto(True, ImageTk.PhotoImage(file="icon.png"))
         self.geometry("800x600")
         self.resizable(False, False)
         self.configure(background="black")
+        self._create_ui()
+
+    def _create_ui(self):
 
         self.search_label = customtkinter.CTkLabel(self, text="Search", width=320, height=40,
                                                    font=FONT)
@@ -71,8 +76,11 @@ class SearchWindow(tkinter.Tk):
         self.progress_bar.place_forget()
         process.join()
         del queue, process
+        next_window = SelectWindow(self)
+        next_window.insert_articles(results)
         for result in results:
             print(result)
+        self.withdraw()
 
 
 if __name__ == "__main__":

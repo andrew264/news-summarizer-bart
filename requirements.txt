@@ -5,3 +5,4 @@ soupsieve
 python-dateutil
 customtkinter
 newsapi-python
+Pillow

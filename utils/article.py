@@ -1,3 +1,4 @@
+import io
 from datetime import datetime
 from typing import Optional
 
@@ -43,7 +44,7 @@ class Article:
         if self._image_data is None:
             with requests.get(self.article['urlToImage'], stream=True) as r:
                 if r.status_code == 200:
-                    self._image_data = r.content
+                    self._image_data = io.BytesIO(r.content)
         return self._image_data
 
     @property
