@@ -5,7 +5,7 @@ from newsapi import NewsApiClient
 
 from utils.article import Article
 
-with open('config.json') as f:
+with open('../config.json') as f:
     config = json.load(f)
     API_KEY = config['newsapi-key']
 

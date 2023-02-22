@@ -1,8 +1,7 @@
 tensorflow
 transformers
-bs4
+beautifulsoup4
 soupsieve
 python-dateutil
-customtkinter
 newsapi-python
-Pillow
+flask
