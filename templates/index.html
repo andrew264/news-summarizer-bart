@@ -8,6 +8,37 @@
     <title>News Summarizer</title>
 </head>
 <body>
-    <h1> Welcome {{ name }} !!</h1>
+    <form method="post">
+        <label for="query"> Search: </label>
+            <input type="text" id="query" name="query">
+        <br>
+
+        <label for="category">Category:</label>
+            <select id="category" name="category">
+                <option value="all">All</option>
+                <option value="business">Business</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="general">General</option>
+                <option value="health">Health</option>
+                <option value="science">Science</option>
+                <option value="sports">Sports</option>
+                <option value="technology">Technology</option>
+            </select>
+        <br>
+
+        <input type="submit" value="Submit">
+        </form>
+
+        <div class="container">
+            <div class="article-container">
+                {% for article in articles %}
+                    <div class="article">
+                        <h3 class="article-title">{{ article.title }}</h3>
+                        <p class="article-description">{{ article.description }}</p>
+                        <a href="{{ article.url }}" target="_blank">Read More</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
 </body>
 </html>
