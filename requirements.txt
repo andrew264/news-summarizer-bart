@@ -4,4 +4,4 @@ beautifulsoup4
 soupsieve
 python-dateutil
 newsapi-python
-flask
+flask[async]
