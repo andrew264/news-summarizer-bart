@@ -1,4 +1,3 @@
-import io
 from datetime import datetime
 from typing import Optional
 
@@ -40,12 +39,8 @@ class Article:
         return self.article['url']
 
     @property
-    def image(self) -> Optional[bytes]:
-        if self._image_data is None:
-            with requests.get(self.article['urlToImage'], stream=True) as r:
-                if r.status_code == 200:
-                    self._image_data = io.BytesIO(r.content)
-        return self._image_data
+    def image(self) -> Optional[str]:
+        return self.article['urlToImage']
 
     @property
     def content(self) -> Optional[str]:
