@@ -78,3 +78,11 @@ h1 {
     height: calc(2 * 1.2em);
     line-height: 1.2em;
 }
+.article-container {
+    width: 50%;
+    background-color: #202123;
+}
+.article-content {
+    padding: 5%;
+    text-align: justify;
+}

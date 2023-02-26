@@ -30,12 +30,12 @@
         </form>
 
         <div class="container">
-            <div class="article-container">
-                {% for article in articles %}
+            <div class="article-grid-container">
+                {% for i in range(0, length) %}
                     <div class="article">
-                        <h3 class="article-title">{{ article.title }}</h3>
-                        <p class="article-description">{{ article.description }}</p>
-                        <a href="{{ article.url }}" target="_blank">Read More</a>
+                        <h3 class="article-title">{{ articles[i].title }}</h3>
+                        <p class="article-description">{{ articles[i].description }}</p>
+                        <a href="{{ i }}" target="_blank">Read More</a>
                     </div>
                 {% endfor %}
             </div>

@@ -73,32 +73,32 @@ class Article:
         if soup is None:
             return None
         all_paragraphs = sv.select('div[data-component="text-block"]', soup)
-        return ' '.join([p.text for p in all_paragraphs])
+        return ' '.join([p.text + "\n\n" for p in all_paragraphs])
 
     def _get_the_verge_content(self) -> Optional[str]:
         soup = self._get_soup()
         if soup is None:
             return None
         all_paragraphs = sv.select('div[class*="article-body-component"]', soup)
-        return ' '.join([p.text for p in all_paragraphs])
+        return ' '.join([p.text + "\n\n" for p in all_paragraphs])
 
     def _get_techcrunch_content(self) -> Optional[str]:
         soup = self._get_soup()
         if soup is None:
             return None
         all_paragraphs = sv.select('div[class*="content"]', soup)
-        return ' '.join([p.text for p in all_paragraphs])
+        return ' '.join([p.text + "\n\n" for p in all_paragraphs])
 
     def _get_default_content(self) -> Optional[str]:
         soup = self._get_soup()
         if soup is None:
             return None
         all_paragraphs = sv.select('body p', soup)
-        return ' '.join([p.text for p in all_paragraphs])
+        return ' '.join([p.text + "\n\n" for p in all_paragraphs])
 
     def _get_gsmarena_content(self) -> Optional[str]:
         soup = self._get_soup()
         if soup is None:
             return None
         all_paragraphs = sv.select('div[class*="article-body"], div[class*="review-body"]', soup)
-        return ' '.join([p.text for p in all_paragraphs])
+        return ' '.join([p.text + "\n\n" for p in all_paragraphs])

@@ -5,3 +5,4 @@ soupsieve
 python-dateutil
 newsapi-python
 flask[async]
+aiohttp

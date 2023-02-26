@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ article.title }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+    <body>
+        <div class="article-container">
+            <div class="article-content" id="article-content">
+                <h3>Content:</h3><br>
+                <p> {{ article.content }} </p>
+            </div>
+        </div>
+    </body>
+</html>
