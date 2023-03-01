@@ -12,6 +12,7 @@ class Article:
         self.article = article
         self._image_data = None
         self._content = None
+        self._summary = None
         if self.article['source']['id'] is None:
             self.article['source']['id'] = self.article['source']['name']
 
@@ -61,6 +62,10 @@ class Article:
             self._content = self.title + ' ' + self.description
 
         return self._content.strip()
+
+    @property
+    def summary(self) -> Optional[str]:
+        return self._summary
 
     def _get_soup(self) -> Optional[bs]:
         with requests.get(self.url) as r:
