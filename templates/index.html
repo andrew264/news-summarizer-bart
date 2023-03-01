@@ -2,47 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='images/icon.png') }}" rel="icon">
     <title>News Summarizer</title>
 </head>
 <body style="margin:0;">
-    <div class="container">
-        <div class="search-menu">
-            <form method="post">
-                <label for="query"> Search: </label>
-                    <input type="text" id="query" name="query">
-                <br>
+<div class="container">
+    <div class="search-menu">
+        <form method="post">
+            <label for="query"> Search: </label>
+            <input id="query" name="query" type="text">
+            <br>
 
-                <label for="category">Category:</label>
-                    <select id="category" name="category">
-                        <option value="all">All</option>
-                        <option value="business">Business</option>
-                        <option value="entertainment">Entertainment</option>
-                        <option value="general">General</option>
-                        <option value="health">Health</option>
-                        <option value="science">Science</option>
-                        <option value="sports">Sports</option>
-                        <option value="technology">Technology</option>
-                    </select>
-                <br>
+            <label for="category">Category:</label>
+            <select id="category" name="category">
+                <option value="all">All</option>
+                <option value="business">Business</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="general">General</option>
+                <option value="health">Health</option>
+                <option value="science">Science</option>
+                <option value="sports">Sports</option>
+                <option value="technology">Technology</option>
+            </select>
+            <br>
 
-                <input type="submit" value="Submit">
-            </form>
-        </div>
-
-        <div class="article-grid-container">
-            {% for i in range(0, length) %}
-                <a href="{{ i }}" target="_blank">
-                    <div class="article"
-                         style="background-image: url({{ articles[i].image }});">
-                        <h1 class="article-title">{{ articles[i].title }}</h1>
-                        <p class="article-description">{{ articles[i].description }}</p>
-                    </div>
-                </a>
-            {% endfor %}
-        </div>
+            <input type="submit" value="Submit">
+        </form>
     </div>
+
+    <div class="article-grid-container">
+        {% for i in range(0, length) %}
+        <a href="{{ i }}" target="_blank">
+            <div class="article"
+                 style="background-image: url({{ articles[i].image }});">
+                <h1 class="article-title">{{ articles[i].title }}</h1>
+                <p class="article-description">{{ articles[i].description }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
 </body>
 </html>

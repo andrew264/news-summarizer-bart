@@ -11,6 +11,7 @@
     padding: 0;
     overflow-x: hidden;
 }
+
 .search-menu {
     flex: 1;
     align-items: center;
@@ -19,17 +20,20 @@
     position: fixed;
     height: 100%;
 }
+
 form {
     display: flex;
     flex-direction: column;
     align-items: center;
     Justify-content: flex-start;
 }
+
 label {
     font-size: 20px;
     margin-bottom: 10px;
     margin-left: 10px;
 }
+
 input[type="text"], select {
     width: 80%;
     height: 40px;
@@ -40,7 +44,8 @@ input[type="text"], select {
     text-align: center;
     font-size: 20px;
 }
-input[type="submit"]{
+
+input[type="submit"] {
     width: 40%;
     height: 40px;
     border-radius: 10px;
@@ -50,7 +55,7 @@ input[type="submit"]{
     font-size: 20px;
 }
 
-.article-grid-container{
+.article-grid-container {
     flex: 4;
     display: flex;
     flex-wrap: wrap;
@@ -58,6 +63,7 @@ input[type="submit"]{
     align-content: flex-start;
     margin-left: 20%;
 }
+
 .article {
     align-items: center;
     padding: 20px;
@@ -73,6 +79,7 @@ input[type="submit"]{
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
+
 .article h1 {
     position: relative;
     min-height: 60px;
@@ -84,6 +91,7 @@ input[type="submit"]{
     max-height: 100px;
     text-shadow: 4px 4px 1em black;
 }
+
 .article p {
     font-size: 20px;
     margin: 0;
