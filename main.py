@@ -1,11 +1,7 @@
-import re
-
-import aiohttp
-from bs4 import BeautifulSoup
 from flask import Flask, render_template, request
 
 from utils.article import Article
-from utils.fetch import fetch_news
+from utils.fetch import fetch_news, fetch_summary
 
 app = Flask(__name__)
 results: list[Article] = []
@@ -29,5 +25,7 @@ async def article(i: int):
     if not results or 0 > i > len(results):
         return render_template('index.html', results=[], length=0)
 
-    print(results[i].article)
-    return render_template('article.html', article=results[i])
+    summary = await fetch_summary(results[i].content)
+
+    print(summary)
+    return render_template('article.html', title=results[i].title, summary=summary)

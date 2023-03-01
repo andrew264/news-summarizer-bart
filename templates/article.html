@@ -2,28 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ article.title }}</title>
-    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <title>{{ title }}</title>
+    <link href="{{ url_for('static', filename='images/icon.png') }}" rel="icon">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
 </head>
-    <body>
-        <div class="article-container">
-            <div class="article-content" id="article-content">
-                <label for="article-content-text">
-                    Content:
-                </label><br>
-                <textarea name="article-content-text" id="article-content-text" rows="50" wrap="hard">
-                    {{ article.content }}
+<body>
+<div class="article-container">
+    <div class="article-summary">
+        <label for="article-summary-text">
+            Summary:
+        </label><br>
+        <textarea id="article-summary-text" name="article-summary-text" rows="50" wrap="hard">
+                    {{ summary }}
                 </textarea>
-            </div>
-            <div class="article-summary">
-                <label for="article-summary-text">
-                    Summary:
-                </label><br>
-                <textarea name="article-summary-text" id="article-summary-text" rows="50" wrap="hard">
-                    {{ article.summary }}
-                </textarea>
-            </div>
-        </div>
-    </body>
+    </div>
+</div>
+</body>
 </html>

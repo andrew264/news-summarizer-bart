@@ -1,11 +1,12 @@
-from flask import Flask, request
-import tensorflow as tf
-
 from pathlib import Path
+
+import tensorflow as tf
+from flask import Flask, request
 from transformers import BartConfig, BartTokenizer, TFBartForConditionalGeneration
 from transformers import SummarizationPipeline
 
-model_path = Path('/bart_large_cnn')
+model_path = Path('bart_large_cnn')
+
 
 def load_tokenizer():
     tokenizer = BartTokenizer.from_pretrained(str(model_path))
@@ -13,9 +14,11 @@ def load_tokenizer():
     config.output_hidden_states = True
     return tokenizer, config
 
+
 def load_model(config):
     model = TFBartForConditionalGeneration.from_pretrained(model_path, config=config)
     return model
+
 
 if __name__ == '__main__':
     # limit the GPU memory growth
@@ -29,16 +32,15 @@ if __name__ == '__main__':
 
     generator = SummarizationPipeline(model=model, tokenizer=tokenizer, framework='tf', device=0)
 
+
     @app.route('/', methods=['GET', 'POST'])
     def index():
         if request.method == 'POST':
             content = request.form['content']
             summary = generator(content, max_length=100, min_length=30, num_beams=5, top_k=50)
-            return summary
+            return {'summary': summary[0]}
         else:
-            return ""
+            return {'summary': 'No content'}
 
 
-
-
-    app.run(debug=True)
+    app.run(host="localhost", port=6969, debug=False)
