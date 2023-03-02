@@ -1,7 +1,7 @@
-from PyQt5.QtCore import QUrl
+from PyQt5.QtCore import QUrl, Qt
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
-from PyQt5.QtWidgets import QMainWindow, QSplitter, QFrame, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QSplitter, QFrame, QStatusBar, QProgressBar
 
 
 class CustomWebEnginePage(QWebEnginePage):
@@ -26,20 +26,36 @@ class ArticleWindow(QMainWindow):
         self.web_view = QWebEngineView()
         self.web_view.setPage(CustomWebEnginePage(self))
         self.web_view.load(QUrl(url))
+        self.set_icon()
 
+        # Add the web view to the main layout
         self.frame = QFrame()
-        layout = QHBoxLayout()
-        layout.addWidget(self.web_view)
-        self.frame.setLayout(layout)
-        self.setCentralWidget(self.frame)
-        width = self.width() // 2
-        self.frame.setFixedSize(width, self.height())
-        self.frame.move(0, 0)
-        self.resizeEvent = self.resize_handler
+        self.splitter = QSplitter()
+        self.splitter.setStyleSheet('QSplitter::handle { border: none; }')
+        self.splitter.addWidget(self.web_view)
+        self.splitter.addWidget(self.frame)
+        self.setCentralWidget(self.splitter)
 
-    def resize_handler(self, event):
-        size = event.size()
-        width = size.width() // 2
-        self.frame.setFixedSize(width, size.height())
-        self.frame.move(0, 0)
-        super().resizeEvent(event)
+        # Create the status bar and progress bar
+        self.status_bar = QStatusBar()
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setTextVisible(False)
+        self.progress_bar.setMinimum(0)
+        self.progress_bar.setMaximum(0)
+        self.progress_bar.setValue(0)
+        self.status_bar.addWidget(self.progress_bar)
+        self.status_bar.setSizeGripEnabled(False)
+        self.status_bar.setFixedHeight(20)
+        self.status_bar.setStyleSheet('QStatusBar::item { border: none; }')
+        self.status_bar.addPermanentWidget(self.progress_bar)
+        self.status_bar.layout().setAlignment(self.progress_bar, Qt.AlignRight | Qt.AlignVCenter)
+        self.status_bar.layout().setContentsMargins(0, 0, 0, 0)
+        self.setStatusBar(self.status_bar)
+
+        # Set the window icon and title to match the website
+        self.web_view.page().titleChanged.connect(self.setWindowTitle)
+        self.web_view.page().iconChanged.connect(self.setWindowIcon)
+
+    def set_icon(self):
+        # get icon from the web view's page and set it as the window's icon
+        self.setWindowIcon(self.web_view.page().icon())

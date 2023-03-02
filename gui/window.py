@@ -1,5 +1,7 @@
+import ctypes
+
 from PyQt5.QtCore import QUrl
-from PyQt5.QtGui import QPalette, QColor
+from PyQt5.QtGui import QPalette, QColor, QIcon
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 from PyQt5.QtWidgets import QMainWindow
 
@@ -22,7 +24,9 @@ class CustomWebEnginePage(QWebEnginePage):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('My Browser Window')
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'andrew264.news_summarizer.0.1.0')
+        self.setWindowTitle('News Summarizer')
+        self.setWindowIcon(QIcon('static/images/icon.png'))
         self.setGeometry(100, 100, 1920, 1080)
 
         self.web_view = QWebEngineView(self)
@@ -38,5 +42,4 @@ class MainWindow(QMainWindow):
     def load_flask(self):
         self.web_view.load(QUrl('http://localhost:5420'))
 
-        # Show the window
         self.show()
