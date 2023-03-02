@@ -1,13 +1,18 @@
+import sys
+from threading import Thread
+
+from PyQt5.QtWidgets import QApplication
 from flask import Flask, render_template, request
 
+from gui import MainWindow
 from utils.article import Article
-from utils.fetch import fetch_news, fetch_summary
+from utils.fetch import fetch_news
 
-app = Flask(__name__)
+flask_app = Flask(__name__)
 results: list[Article] = []
 
 
-@app.route('/', methods=['GET', 'POST'])
+@flask_app.route('/', methods=['GET', 'POST'])
 async def index():
     if request.method == 'POST':
         query = request.form['query']
@@ -20,12 +25,18 @@ async def index():
         return render_template('index.html', results=[], length=0)
 
 
-@app.route('/<int:i>')
+@flask_app.route('/<int:i>')
 async def article(i: int):
-    if not results or 0 > i > len(results):
-        return render_template('index.html', results=[], length=0)
+    return render_template('index.html', articles=results, length=len(results))
 
-    summary = await fetch_summary(results[i].content)
 
-    print(summary)
-    return render_template('article.html', title=results[i].title, summary=summary)
+def start_flask_server():
+    flask_app.run(host="localhost", port=5420, debug=False)
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    main_window = MainWindow()
+    Thread(target=start_flask_server).start()
+    main_window.load_flask()
+    app.exec_()

@@ -34,7 +34,7 @@
 
     <div class="article-grid-container">
         {% for i in range(0, length) %}
-        <a href="{{ i }}" target="_blank">
+        <a href="{{ articles[i].url }}" target="_self">
             <div class="article"
                  style="background-image: url({{ articles[i].image }});">
                 <h1 class="article-title">{{ articles[i].title }}</h1>
