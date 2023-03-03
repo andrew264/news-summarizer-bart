@@ -2,7 +2,6 @@ import asyncio
 import json
 from typing import Optional
 
-import aiohttp
 from newsapi import NewsApiClient
 
 from utils.article import Article
@@ -23,14 +22,7 @@ def _fetch_news(search_term: str, category: Optional[str], ):
     return [Article(article) for article in results['articles']]
 
 
-async def fetch_news(search_term: str, category: Optional[str] = None):
+async def fetch_news(search_term: str = '', category: Optional[str] = None):
     event_loop = asyncio.get_event_loop()
     results = await event_loop.run_in_executor(None, _fetch_news, search_term, category, )
     return results
-
-
-async def fetch_summary(content: str):
-    async with aiohttp.request('POST', 'http://127.0.0.1:6969', data={'content': content}) as response:
-        response.raise_for_status()
-        summary = (await response.json())['summary']['summary_text']
-        return summary

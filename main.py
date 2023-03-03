@@ -14,19 +14,19 @@ results: list[Article] = []
 
 @flask_app.route('/', methods=['GET', 'POST'])
 async def index():
+    global results
     if request.method == 'POST':
         query = request.form['query']
         category = request.form['category']
         category = None if category == 'all' else category
-        global results
         results = await fetch_news(query, category)
-        return render_template('index.html', articles=results, length=len(results))
     else:
-        return render_template('index.html', results=[], length=0)
+        results = await fetch_news()
+    return render_template('index.html', articles=results, length=len(results))
 
 
 @flask_app.route('/<int:i>')
-async def article(i: int):
+async def article():
     return render_template('index.html', articles=results, length=len(results))
 
 
