@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Summary</title>
+</head>
+<body style="background: gray">
+<div class="summary">
+  <ul style="list-style-type: disc">
+    {% for sentence in summary %}
+      <li> {{ sentence }}</li>
+    {% endfor %}
+  </ul>
+</div>
+</body>
+</html>
