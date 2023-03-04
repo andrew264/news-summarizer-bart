@@ -1,6 +1,8 @@
-import requests
-from PyQt5.QtCore import QUrl, Qt
+from urllib.parse import quote
+
+from PyQt5.QtCore import QUrl, Qt, QByteArray
 from PyQt5.QtGui import QPalette, QColor
+from PyQt5.QtWebEngineCore import QWebEngineUrlRequestInterceptor, QWebEngineHttpRequest
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 from PyQt5.QtWidgets import QMainWindow, QSplitter, QSizePolicy
 
@@ -12,6 +14,23 @@ class CustomWebEnginePage(QWebEnginePage):
         if _type == QWebEnginePage.NavigationTypeLinkClicked:
             return False
         return super().acceptNavigationRequest(url, _type, isMainFrame)
+
+
+class PostDataInterceptor(QWebEngineUrlRequestInterceptor):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.postData = None
+
+    def interceptRequest(self, info):
+        if self.postData is not None:
+            print('intercepted request: ' + info.requestUrl().toString())
+            request = QWebEngineHttpRequest(info.requestUrl(), QWebEngineHttpRequest.Post)
+            print('post data: ' + self.postData.data().data().decode('utf-8'))
+            request.setHeader(QByteArray(b'Content-Type'), QByteArray(b'application/json'))
+            request.setPostData(self.postData)
+            print('request: ' + request.url().toString())
+            info.redirect(request)
+            print('redirected')
 
 
 class ArticleWindow(QMainWindow):
@@ -33,6 +52,8 @@ class ArticleWindow(QMainWindow):
         self.set_icon()
         self.summary_view = QWebEngineView()
         self.summary_view.setPage(CustomWebEnginePage(self))
+        summary_settings = self.summary_view.settings()
+        summary_settings.setAttribute(summary_settings.JavascriptEnabled, True)
         self.splitter.addWidget(self.summary_view)
         self.update_summary(url)
 
@@ -48,8 +69,9 @@ class ArticleWindow(QMainWindow):
         self.setWindowIcon(self.web_view.page().icon())
 
     def update_summary(self, url: QUrl | str):
+        SERVER_URL = 'http://localhost:6969'
         if isinstance(url, QUrl):
             url = url.url()
-        req = requests.post('http://localhost:6969/', data={'url': url})
-
-        self.summary_view.setHtml(req.text, QUrl('http://localhost:6969/'))
+        url = quote(url, safe='')
+        url = f"{SERVER_URL}/?url={url}"
+        self.summary_view.load(QUrl(url))

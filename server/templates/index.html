@@ -3,14 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Summary</title>
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/load.js') }}"></script>
+    <link href="{{ url_for('static', filename='images/icon.png') }}" rel="icon">
+    <script>
+        window.onload = function () {
+            showLoadingPage();
+            console.log('Loading page');
+            fetch('/result')
+                .then(response => response.json())
+                .then(response => {
+                        updatePageContent(response);
+                        hideLoadingPage();
+                    }
+                );
+            console.log('Page loaded');
+        };
+    </script>
 </head>
-<body style="background: gray">
-<div class="summary">
-  <ul style="list-style-type: disc">
-    {% for sentence in summary %}
-      <li> {{ sentence }}</li>
-    {% endfor %}
-  </ul>
-</div>
+<body style="margin: 0">
 </body>
 </html>

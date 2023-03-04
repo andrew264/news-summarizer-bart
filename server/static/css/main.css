@@ -1,0 +1,48 @@
+#loading-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #202123;
+}
+
+.spinner {
+    width: 100px;
+    height: 100px;
+    border: 10px solid #2b2c2f;
+    border-top-color: #444653;
+    border-radius: 69%;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+body {
+    background-color: #444653;
+}
+
+#summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+ul {
+    list-style-type: disc;
+    padding-right: 20px;
+}
+
+li {
+    margin: 0 0 10px 20px;
+    padding: 10px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 28px;
+    color: #fff;
+    text-align: justify;
+}
