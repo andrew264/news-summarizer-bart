@@ -25,7 +25,8 @@ class Article:
 
     @property
     def description(self) -> str:
-        return self.article['description']
+        description = self.article['description']
+        return description if description else ''
 
     @property
     def url(self) -> str:

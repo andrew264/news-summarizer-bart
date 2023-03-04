@@ -12,25 +12,12 @@ class CustomWebEnginePage(QWebEnginePage):
 
     def acceptNavigationRequest(self, url, _type, isMainFrame):
         if _type == QWebEnginePage.NavigationTypeLinkClicked:
+            w = ArticleWindow(url.toString())
+            w.show()
+
+            self.external_windows.append(w)
             return False
         return super().acceptNavigationRequest(url, _type, isMainFrame)
-
-
-class PostDataInterceptor(QWebEngineUrlRequestInterceptor):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.postData = None
-
-    def interceptRequest(self, info):
-        if self.postData is not None:
-            print('intercepted request: ' + info.requestUrl().toString())
-            request = QWebEngineHttpRequest(info.requestUrl(), QWebEngineHttpRequest.Post)
-            print('post data: ' + self.postData.data().data().decode('utf-8'))
-            request.setHeader(QByteArray(b'Content-Type'), QByteArray(b'application/json'))
-            request.setPostData(self.postData)
-            print('request: ' + request.url().toString())
-            info.redirect(request)
-            print('redirected')
 
 
 class ArticleWindow(QMainWindow):
@@ -60,18 +47,18 @@ class ArticleWindow(QMainWindow):
         self.splitter.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setCentralWidget(self.splitter)
 
-        # Set the window icon and title to match the website
         self.web_view.page().titleChanged.connect(self.setWindowTitle)
+
         self.web_view.page().iconChanged.connect(self.setWindowIcon)
 
     def set_icon(self):
         # get icon from the web view's page and set it as the window's icon
         self.setWindowIcon(self.web_view.page().icon())
 
-    def update_summary(self, url: QUrl | str):
+    def update_summary(self, url: str | QUrl):
         SERVER_URL = 'http://localhost:6969'
         if isinstance(url, QUrl):
-            url = url.url()
+            url = url.toString()
         url = quote(url, safe='')
         url = f"{SERVER_URL}/?url={url}"
         self.summary_view.load(QUrl(url))

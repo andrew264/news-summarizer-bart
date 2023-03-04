@@ -38,11 +38,13 @@ def get_summary(url):
 
 @app.route('/', methods=['GET'])
 async def infer():
-    # decode the url
     url = request.args.get('url', type=str)
-    if url is None:
+    if url is None or url == '':
         return 'No URL Provided!'
     url = unquote(url)
+
+    while queue.qsize():
+        queue.get()
 
     Thread(target=get_summary, args=(url,)).start()
 

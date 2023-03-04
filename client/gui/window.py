@@ -5,7 +5,7 @@ from PyQt5.QtGui import QPalette, QColor, QIcon
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 from PyQt5.QtWidgets import QMainWindow
 
-from gui.article_window import ArticleWindow
+from client.gui.article_window import ArticleWindow
 
 
 class CustomWebEnginePage(QWebEnginePage):
@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'andrew264.news_summarizer.0.1.0')
         self.setWindowTitle('News Summarizer')
-        self.setWindowIcon(QIcon('static/images/icon.png'))
+        self.setWindowIcon(QIcon('client/static/images/icon.png'))
         self.setGeometry(100, 100, 1920, 1080)
 
         self.web_view = QWebEngineView(self)
