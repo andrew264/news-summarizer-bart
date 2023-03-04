@@ -24,7 +24,7 @@ class CustomWebEnginePage(QWebEnginePage):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'andrew264.news_summarizer.0.1.0')
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(u'andrew264.news_summarizer.1.0.0')
         self.setWindowTitle('News Summarizer')
         self.setWindowIcon(QIcon('client/static/images/icon.png'))
         self.setGeometry(100, 100, 1920, 1080)
