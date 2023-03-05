@@ -12,23 +12,49 @@ function showLoadingPage() {
 
 function hideLoadingPage() {
     const loadingPage = document.getElementById('loading-page');
-    const title = document.getElementById('title');
     loadingPage.remove();
-    title.remove();
+}
+
+function createSummary() {
+    const summary = document.createElement('div');
+    summary.id = 'summary';
+    document.body.appendChild(summary);
 }
 
 function updatePageContent(response) {
     console.log(response);
 
-    const summary = document.createElement('div');
-    summary.id = 'summary';
-
+    const summary = document.getElementById('summary');
     const ul = document.createElement('ul');
-    for (let i = 0; i < response.length; i++) {
-        const li = document.createElement('li');
-        li.textContent = response[i];
-        ul.appendChild(li);
-    }
     summary.appendChild(ul);
-    document.body.appendChild(summary);
+
+    let i = 0;
+
+    function addWord() {
+        if (i >= response.length) {
+            return;
+        }
+
+        const li = document.createElement('li');
+        ul.appendChild(li);
+
+        const words = response[i].split(' ');
+        let j = 0;
+
+        function typeWord() {
+            if (j >= words.length) {
+                i++;
+                setTimeout(addWord, 500);
+                return;
+            }
+
+            li.textContent += words[j] + ' ';
+            j++;
+            setTimeout(typeWord, 1000 / 10); // 10 words per second
+        }
+
+        setTimeout(typeWord, 500);
+    }
+
+    addWord();
 }

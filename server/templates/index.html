@@ -9,12 +9,12 @@
     <script>
         window.onload = function () {
             showLoadingPage();
-            console.log('Loading page');
             fetch('/result')
                 .then(response => response.json())
                 .then(response => {
-                        updatePageContent(response);
                         hideLoadingPage();
+                        createSummary();
+                        updatePageContent(response);
                     }
                 );
             console.log('Page loaded');

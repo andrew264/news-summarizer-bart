@@ -28,21 +28,23 @@ body {
 #summary {
     display: flex;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: left;
     height: 100vh;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap');
+    color: #fff;
+    font-size: 28px;
 }
 
 ul {
     list-style-type: disc;
     padding-right: 20px;
+    text-align: left;
 }
 
 li {
     margin: 0 0 10px 20px;
     padding: 10px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 28px;
-    color: #fff;
     text-align: justify;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
 }
