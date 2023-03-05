@@ -14,7 +14,7 @@ def break_down_paragraph(paragraph: str) -> list[str]:
         words = sentence.split()
         if not concatenated:
             concatenated.append(sentence)
-        elif len(concatenated[-1].split()) + len(words) < 640:
+        elif len(concatenated[-1].split()) + len(words) < 720:
             concatenated[-1] += ". " + sentence
         else:
             concatenated.append(sentence)

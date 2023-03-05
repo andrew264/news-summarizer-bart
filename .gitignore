@@ -13,3 +13,6 @@ config.json
 
 # virtualenv
 venv/
+
+# sample text
+/notebooks/test.txt
