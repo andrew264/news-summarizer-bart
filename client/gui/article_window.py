@@ -1,8 +1,8 @@
+import gc
 from urllib.parse import quote
 
-from PyQt5.QtCore import QUrl, Qt, QByteArray
+from PyQt5.QtCore import QUrl, Qt
 from PyQt5.QtGui import QPalette, QColor
-from PyQt5.QtWebEngineCore import QWebEngineUrlRequestInterceptor, QWebEngineHttpRequest
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 from PyQt5.QtWidgets import QMainWindow, QSplitter, QSizePolicy
 
@@ -11,6 +11,7 @@ class CustomWebEnginePage(QWebEnginePage):
     external_windows = []
 
     def acceptNavigationRequest(self, url, _type, isMainFrame):
+        gc.collect()
         if _type == QWebEnginePage.NavigationTypeLinkClicked:
             w = ArticleWindow(url.toString())
             w.show()

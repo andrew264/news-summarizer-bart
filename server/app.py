@@ -1,4 +1,5 @@
 import asyncio
+import gc
 from multiprocessing import Queue
 from pathlib import Path
 from threading import Thread
@@ -71,6 +72,7 @@ async def infer():
     if url is None or url == '':
         return 'No URL Provided!'
     Thread(target=get_summary, args=(unquote(url),)).start()
+    gc.collect()
 
     return render_template('index.html')
 

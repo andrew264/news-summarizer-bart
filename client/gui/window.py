@@ -5,20 +5,7 @@ from PyQt5.QtGui import QPalette, QColor, QIcon
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 from PyQt5.QtWidgets import QMainWindow
 
-from client.gui.article_window import ArticleWindow
-
-
-class CustomWebEnginePage(QWebEnginePage):
-    external_windows = []
-
-    def acceptNavigationRequest(self, url, _type, isMainFrame):
-        if _type == QWebEnginePage.NavigationTypeLinkClicked:
-            w = ArticleWindow(url)
-            w.show()
-
-            self.external_windows.append(w)
-            return False
-        return super().acceptNavigationRequest(url, _type, isMainFrame)
+from client.gui.article_window import ArticleWindow, CustomWebEnginePage
 
 
 class MainWindow(QMainWindow):
