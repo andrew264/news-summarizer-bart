@@ -20,8 +20,8 @@ class Article:
         return self.article['author']
 
     @property
-    def date(self) -> datetime:
-        return dateutil.parser.isoparse(self.article['publishedAt'])
+    def date(self) -> Optional[datetime]:
+        return dateutil.parser.isoparse(self.article['publishedAt']) if 'publishedAt' in self.article else None
 
     @property
     def description(self) -> str:
