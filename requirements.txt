@@ -1,5 +1,8 @@
 torch
-transformers
+git+https://github.com/huggingface/transformers.git
+sentencepiece
+datasets
+numpy
 beautifulsoup4
 soupsieve
 python-dateutil

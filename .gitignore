@@ -2,8 +2,9 @@
 /.idea
 /.run
 
-# Model
+# Models
 /bart_large_cnn
+/speech
 
 # API keys
 config.json

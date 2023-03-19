@@ -22,7 +22,7 @@ function createSummary() {
 }
 
 function updatePageContent(response) {
-    console.log(response);
+    console.log(response['summary']);
 
     const summary = document.getElementById('summary');
     const ul = document.createElement('ul');
@@ -31,29 +31,30 @@ function updatePageContent(response) {
     let i = 0;
 
     function addWord() {
-        if (i >= response.length) {
+        let summ = response['summary'];
+        if (i >= summ.length) {
             return;
         }
 
         const li = document.createElement('li');
         ul.appendChild(li);
 
-        const words = response[i].split(' ');
+        const words = summ[i].split(' ');
         let j = 0;
 
         function typeWord() {
             if (j >= words.length) {
                 i++;
-                setTimeout(addWord, 500);
+                setTimeout(addWord, 200);
                 return;
             }
 
             li.textContent += words[j] + ' ';
             j++;
-            setTimeout(typeWord, 1000 / 10); // 10 words per second
+            setTimeout(typeWord, 1000 / 24); // 24 words per second
         }
 
-        setTimeout(typeWord, 500);
+        setTimeout(typeWord, 200);
     }
 
     addWord();

@@ -5,9 +5,12 @@ from pathlib import Path
 from threading import Thread
 from urllib.parse import unquote
 
+import numpy as np
 import torch
+from datasets import load_dataset
 from flask import Flask, render_template, request, jsonify
-from transformers import BartConfig, BartTokenizer, BartForConditionalGeneration
+from transformers import BartConfig, BartTokenizer, BartForConditionalGeneration, SpeechT5HifiGan, \
+    SpeechT5ForTextToSpeech, SpeechT5Processor
 
 from server.utils import ArticleScraper, break_down_paragraph
 
@@ -16,20 +19,27 @@ model_path = Path('../bart_large_cnn')
 app = Flask(__name__)
 
 queue = Queue()
-print('Loading Model...')
+print('Loading Models...')
 tokenizer = BartTokenizer.from_pretrained(str(model_path))
 config = BartConfig.from_pretrained(str(model_path))
 model = BartForConditionalGeneration.from_pretrained(model_path, config=config)
 model = model.cuda() if torch.cuda.is_available() else model
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
-print('Model Loaded!')
+print("loaded BART model")
+tts_processor = SpeechT5Processor.from_pretrained("../speech/speecht5_tts")
+tts_model = SpeechT5ForTextToSpeech.from_pretrained("../speech/speecht5_tts")
+tts_vocoder = SpeechT5HifiGan.from_pretrained("../speech/speecht5_hifigan")
+embeddings_dataset = load_dataset(path="../speech/cmu-arctic-xvectors", split="validation")
+speaker_embeddings = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
+print("loaded TTS model")
+print('All Models Loaded!')
 
 
 def generator(content, num_return_sequences=1, num_beams=2, top_k=50, max_length=72, min_length=12):
     inputs = tokenizer.batch_encode_plus(content,
                                          return_tensors='pt',
                                          max_length=1024,
-                                         pad_to_max_length=True,
+                                         padding='longest',
                                          truncation=True).to(device)
     input_ids = inputs['input_ids']
     attention_mask = inputs['attention_mask']
@@ -63,7 +73,18 @@ def get_summary(url):
         max_length = 72
     summary = generator(content, max_length=max_length)
     print("Summary Generated!")
-    queue.put(summary)
+    arr = get_tts(summary)
+    queue.put({'summary': summary, 'audio_data': arr, 'sample_rate': 16000})
+
+
+def get_tts(summary: list[str]) -> list[float]:
+    arr = np.array([], dtype=np.float64)
+    for summ in summary:
+        input_ids = tts_processor(text=summ, return_tensors="pt").input_ids
+        speech_data = tts_model.generate_speech(input_ids, speaker_embeddings, vocoder=tts_vocoder).numpy()
+        arr = np.concatenate((arr, speech_data))
+    print("TTS Generated!")
+    return arr.tolist()
 
 
 @app.route('/', methods=['GET'])
