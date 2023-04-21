@@ -11,3 +11,4 @@ flask[async]
 aiohttp
 PyQt5
 PyQtWebEngine
+soundfile

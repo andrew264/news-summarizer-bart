@@ -1,48 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='images/icon.png') }}" rel="icon">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      href="{{ url_for('static', filename='css/main.css') }}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ url_for('static', filename='images/icon.png') }}"
+      rel="icon"
+    />
     <title>News Summarizer</title>
-</head>
-<body style="margin:0;">
-<div class="container">
-    <div class="search-menu">
+  </head>
+  <body style="margin: 0">
+    <div class="container">
+      <div class="left-container">
         <form method="post">
-            <label for="query"> Search: </label>
-            <input id="query" name="query" type="text">
-            <br>
+          <div class="search-input">
+            <label for="query"> Search: </label><br />
+            <input id="query" name="query" type="text" />
+          </div>
 
-            <label for="category">Category:</label>
+          <div class="search-input">
+            <label for="category">Category:</label><br />
             <select id="category" name="category">
-                <option value="all">All</option>
-                <option value="business">Business</option>
-                <option value="entertainment">Entertainment</option>
-                <option value="general">General</option>
-                <option value="health">Health</option>
-                <option value="science">Science</option>
-                <option value="sports">Sports</option>
-                <option value="technology">Technology</option>
+              <option value="all">All</option>
+              <option value="business">Business</option>
+              <option value="entertainment">Entertainment</option>
+              <option value="general">General</option>
+              <option value="health">Health</option>
+              <option value="science">Science</option>
+              <option value="sports">Sports</option>
+              <option value="technology">Technology</option>
             </select>
-            <br>
+          </div>
 
-            <input type="submit" value="Submit">
+          <div class="search-input">
+            <button type="submit">Submit</button>
+          </div>
         </form>
-    </div>
+      </div>
 
-    <div class="article-grid-container">
+      <div class="right-container">
         {% for i in range(0, length) %}
         <a href="{{ articles[i].url }}" target="_self">
-            <div class="article"
-                 style="background-image: url({{ articles[i].image }});">
-                <h1 class="article-title">{{ articles[i].title }}</h1>
-                <p class="article-description">{{ articles[i].description }}</p>
+          <div class="card">
+            <img src="{{ articles[i].image }}" alt="image" />
+            <div class="card-overlay">
+              <h1>{{ articles[i].title }}</h1>
+              <p>{{ articles[i].description }}</p>
             </div>
+          </div>
         </a>
         {% endfor %}
+      </div>
     </div>
-</div>
-</body>
+  </body>
 </html>

@@ -25,11 +25,6 @@ async def index():
     return render_template('index.html', articles=results, length=len(results))
 
 
-@flask_app.route('/<int:i>')
-async def article():
-    return render_template('index.html', articles=results, length=len(results))
-
-
 def start_flask_server():
     flask_app.run(host="localhost", port=5420, debug=False)
 
