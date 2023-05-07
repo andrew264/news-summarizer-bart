@@ -28,6 +28,15 @@ function updatePageContent(response) {
   const ul = document.createElement("ul");
   summary.appendChild(ul);
 
+  // set font size based on length of summary
+  const summaryLength = response["summary"].length;
+
+  if (summaryLength >= 2) {
+    ul.style.fontSize = "1.5em";
+  } else {
+    ul.style.fontSize = "2em";
+  }
+
   let i = 0;
 
   function addWord() {
@@ -60,11 +69,23 @@ function updatePageContent(response) {
   addWord();
 }
 
-// const playButton = document.getElementById("play-button");
-// const audio = document.querySelector("audio");
-//
-// playButton.addEventListener("click", () => {
-//   audio.play().then((r) => {
-//     console.log("Playing audio");
-//   });
-// });
+const audio = new Audio();
+audio.src = "/audio";
+
+function playAudio() {
+  if (audio.readyState !== 4) {
+    console.log("Audio not ready");
+    return;
+  }
+
+  if (audio.paused) {
+    audio.play().then((r) => console.log("Audio played"));
+  } else {
+    audio.pause();
+  }
+}
+
+window.addEventListener("beforeunload", function () {
+  audio.pause();
+  audio.currentTime = 0;
+});

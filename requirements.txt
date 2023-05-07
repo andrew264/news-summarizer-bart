@@ -17,3 +17,4 @@ ohmeow-blurr
 bert-score
 fastai
 fastcore
+gTTS

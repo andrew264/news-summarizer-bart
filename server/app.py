@@ -1,13 +1,14 @@
 import asyncio
 import io
+import re
 import secrets
 from pathlib import Path
 from threading import Thread
 from urllib.parse import unquote
 
-import numpy as np
 import torch
 from flask import Flask, request, session, send_file, jsonify, render_template
+from gtts import gTTS
 from transformers import BartConfig, BartTokenizer, BartForConditionalGeneration
 
 from server.utils import ArticleScraper, break_down_paragraph
@@ -24,18 +25,11 @@ model = BartForConditionalGeneration.from_pretrained(model_path, config=config)
 model = model.cuda() if torch.cuda.is_available() else model
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 print("loaded BART model")
-# tts_processor = SpeechT5Processor.from_pretrained("../speech/speecht5_tts")
-# tts_model = SpeechT5ForTextToSpeech.from_pretrained("../speech/speecht5_tts")
-# tts_vocoder = SpeechT5HifiGan.from_pretrained("../speech/speecht5_hifigan")
-# embeddings_dataset = load_dataset(path="../speech/cmu-arctic-xvectors", split="validation")
-# speaker_embeddings = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
-# print("loaded TTS model")
-# print('All Models Loaded!')
 
 data = {}
 
 
-def generator(content, num_return_sequences=1, num_beams=2, top_k=50, max_length=72, min_length=12):
+def generator(content, num_return_sequences=1, num_beams=1, top_k=20):
     inputs = tokenizer.batch_encode_plus(content,
                                          return_tensors='pt',
                                          max_length=1024,
@@ -47,17 +41,31 @@ def generator(content, num_return_sequences=1, num_beams=2, top_k=50, max_length
                                  attention_mask=attention_mask,
                                  num_beams=num_beams,
                                  num_return_sequences=num_return_sequences,
-                                 max_length=max_length,
-                                 min_length=min_length,
+                                 max_length=90,
                                  top_k=top_k,
                                  early_stopping=True,
                                  )
     del inputs, input_ids, attention_mask
     summary = tokenizer.batch_decode(summary_ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
     del summary_ids
-    summary = [summ[1:].strip() for summ in summary]
     return summary
 
+
+def cleanup_summary(summary: list[str]) -> list[str]:
+    output = []
+    for para in summary:
+        para = para[1:].strip()
+        sentences = re.split("(?<=[.?!]) +", para)
+
+        last_complete_sentence = ""
+        for sentence in sentences:
+            if sentence.endswith(".") or sentence.endswith("?") or sentence.endswith("!"):
+                last_complete_sentence += sentence
+            else:
+                break
+        output.append(last_complete_sentence)
+
+    return output
 
 
 def get_summary(token: str):
@@ -69,29 +77,22 @@ def get_summary(token: str):
         data[token]['summary'] = None
         data[token]['processing'] = False
         return
-    if len(content) >= 8:
-        max_length = 48
-    elif len(content) >= 4:
-        max_length = 64
-    else:
-        max_length = 72
-    summary = generator(content, max_length=max_length)
+    summary = generator(content)
+    summary = cleanup_summary(summary)
     print("Summary Generated!")
-    # arr = get_tts(summary)
-    # # save audio to file
-    # sf.write(f'{token}.wav', arr, 16000)
-    # print("Audio Saved!")
+    audio_bytes = get_tts(summary)
     data[token]['summary'] = summary
+    data[token]['audio'] = audio_bytes
     data[token]['processing'] = False
 
 
-def get_tts(summary: list[str]):
-    arr = np.array([], dtype=np.float64)
-    # for summ in summary:
-    #     input_ids = tts_processor(text=summ, return_tensors="pt").input_ids
-    #     speech_data = tts_model.generate_speech(input_ids, speaker_embeddings, vocoder=tts_vocoder).numpy()
-    #     arr = np.concatenate((arr, speech_data))
-    return arr
+def get_tts(summary: list[str]) -> io.BytesIO:
+    obj = io.BytesIO()
+    for summ in summary:
+        tts = gTTS(summ, lang='en', slow=False)
+        tts.write_to_fp(obj)
+    obj.seek(0)
+    return obj
 
 
 @app.route('/', methods=['GET'])
@@ -99,11 +100,12 @@ async def infer():
     url = request.args.get('url', type=str)
     if url is None or url == '':
         return 'No URL Provided!'
-    # create a random token
+
     token = secrets.token_hex(16)
     data[token] = {
         'processing': True,
         'summary': None,
+        'audio': None,
         'url': unquote(url),
     }
     session['token'] = token
@@ -120,7 +122,7 @@ async def result():
     if token not in data:
         return 'Invalid Token!'
     while data[token]['processing']:
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.3)
     if data[token]['summary'] is None:
         return 'No Summary Generated!'
     return jsonify({'summary': data[token]['summary']})
@@ -134,15 +136,11 @@ async def audio():
     if token not in data:
         return 'Invalid Token!'
     while data[token]['processing']:
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.3)
     if data[token]['summary'] is None:
         return 'No Summary Generated!'
-    # read audio file as BinaryIO
-    audio_file = io.BytesIO(open(f'{token}.wav', 'rb').read())
-    audio_file.seek(0)
-    # delete audio file
 
-    return send_file(audio_file, mimetype='audio/wav')
+    return send_file(data[token]['audio'], mimetype='audio/mp3')
 
 
 if __name__ == '__main__':
