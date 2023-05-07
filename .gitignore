@@ -5,6 +5,7 @@
 # Models
 /bart_large_cnn
 /speech
+/finetuned-bart_large_cnn
 
 # API keys
 config.json

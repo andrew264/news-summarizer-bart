@@ -12,3 +12,8 @@ aiohttp
 PyQt5
 PyQtWebEngine
 soundfile
+requests
+ohmeow-blurr
+bert-score
+fastai
+fastcore

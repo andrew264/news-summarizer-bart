@@ -12,7 +12,7 @@ from transformers import BartConfig, BartTokenizer, BartForConditionalGeneration
 
 from server.utils import ArticleScraper, break_down_paragraph
 
-model_path = Path('../bart_large_cnn')
+model_path = Path('../finetuned-bart_large_cnn')
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
@@ -55,7 +55,9 @@ def generator(content, num_return_sequences=1, num_beams=2, top_k=50, max_length
     del inputs, input_ids, attention_mask
     summary = tokenizer.batch_decode(summary_ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
     del summary_ids
+    summary = [summ[1:].strip() for summ in summary]
     return summary
+
 
 
 def get_summary(token: str):
@@ -68,9 +70,9 @@ def get_summary(token: str):
         data[token]['processing'] = False
         return
     if len(content) >= 8:
-        max_length = 32
-    elif len(content) >= 4:
         max_length = 48
+    elif len(content) >= 4:
+        max_length = 64
     else:
         max_length = 72
     summary = generator(content, max_length=max_length)
